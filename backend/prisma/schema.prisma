@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Document {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  status             Status   @default(DRAFTED)
+  createdByName      String
+  templateFields     Json // e.g. [{ name: "clientName", type: "text" }]
+  finalizedVersionId String?  @db.ObjectId
+  createdAt          DateTime @default(now())
+
+  versions Version[]
+  timeline TimelineEntry[]
+}
+
+model Version {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  versionNumber Int
+  fields        Json // e.g. { "clientName": "Acme", "amount": "5000" }
+  editedByName  String
+  editedByRole  String
+  createdAt     DateTime @default(now())
+
+  documentId String   @db.ObjectId
+  document   Document @relation(fields: [documentId], references: [id])
+}
+
+model TimelineEntry {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  action        String // e.g. "CREATED", "EDITED", "FINALIZED"
+  userName      String
+  userRole      String
+  versionNumber Int? // which version this action relates to
+  createdAt     DateTime @default(now())
+
+  documentId String   @db.ObjectId
+  document   Document @relation(fields: [documentId], references: [id])
+}
+
+enum Status {
+  DRAFTED
+  EDITED
+  FINALIZED
+}
