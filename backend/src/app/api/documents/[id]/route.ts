@@ -13,7 +13,7 @@ export async function GET(req: Request, { params }: Props) {
       where: { id },
       include: {
         versions: {
-          orderBy: { createdAt: "desc" },
+          orderBy: { versionNumber: "desc" },
         },
         timeline: {
           orderBy: { createdAt: "desc" },
@@ -28,7 +28,6 @@ export async function GET(req: Request, { params }: Props) {
       );
 
     return NextResponse.json(document);
-    
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -74,7 +74,7 @@
   }
 
   .home-user {
-    @apply flex-row items-center;
+    @apply flex-row items-center pl-5 gap-10;
   }
 
   .home-avatar {
@@ -82,7 +82,7 @@
   }
 
   .home-user-name {
-    @apply ml-4 text-2xl font-sans-bold text-primary;
+    @apply ml-2 text-2xl font-bold text-white;
   }
 
   .home-add-icon {
@@ -154,15 +154,15 @@
   }
 
   .sub-card-expanded {
-    @apply bg-subscription;
+    @apply bg-card border border-accent;
   }
 
   .sub-head {
-    @apply flex-row items-center py-2;
+    @apply flex-row items-center justify-between w-full py-2 flex-shrink-0;
   }
 
   .sub-main {
-    @apply min-w-0 flex-1 flex-row items-center gap-3;
+    @apply w-full flex-row items-center gap-3;
   }
 
   .sub-icon {
@@ -174,11 +174,11 @@
   }
 
   .sub-title {
-    @apply mb-1 text-lg font-sans-bold text-primary;
+    @apply text-xl font-bold text-primary flex-1 flex-shrink-0;
   }
 
   .sub-meta {
-    @apply text-sm font-sans-semibold text-muted-foreground;
+    @apply text-sm font-semibold text-white bg-success px-2 p-2 rounded-lg shadow-md flex-shrink-0;
   }
 
   .sub-price-box {
@@ -202,7 +202,7 @@
   }
 
   .sub-row {
-    @apply flex-row items-center justify-between gap-3;
+    @apply flex-col items-start justify-between;
   }
 
   .sub-row-copy {

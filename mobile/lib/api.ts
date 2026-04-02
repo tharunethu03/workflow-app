@@ -32,7 +32,7 @@ export const api = {
     role: string,
     userName: string,
   ) => {
-    const res = await fetch(`${BASE_URL}/api/${id}/versions`, {
+    const res = await fetch(`${BASE_URL}/api/documents/${id}/versions`, {
       method: "POST",
       headers: makeHeaders(role, userName, true),
       body: JSON.stringify(data),

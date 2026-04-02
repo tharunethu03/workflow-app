@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -8,6 +7,7 @@ type CreateDocumentBody = {
   createdByName: string;
   createdAt: Date;
   templateFields: string[];
+  templateBody: string;
 };
 
 export async function POST(req: Request) {
@@ -18,9 +18,9 @@ export async function POST(req: Request) {
     }
 
     const body: CreateDocumentBody = await req.json();
-    const { title, createdByName, templateFields } = body;
+    const { title, createdByName, templateFields, templateBody } = body;
 
-    if (!title || !createdByName || !templateFields) {
+    if (!title || !createdByName || !templateFields || !templateBody) {
       return new Response("Missing required fields", { status: 400 });
     }
 
@@ -29,6 +29,7 @@ export async function POST(req: Request) {
         title,
         createdByName,
         templateFields,
+        templateBody,
       },
     });
 
@@ -56,6 +57,14 @@ export async function GET(req: Request) {
   try {
     const documents = await prisma.document.findMany({
       orderBy: { createdAt: "desc" },
+      include: {
+        versions: {
+          orderBy: { createdAt: "desc" },
+        },
+        timeline: {
+          orderBy: { createdAt: "desc" },
+        },
+      },
     });
 
     const formatted = documents.map((d) => {

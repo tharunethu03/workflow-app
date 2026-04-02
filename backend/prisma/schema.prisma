@@ -17,7 +17,8 @@ model Document {
   title              String
   status             Status   @default(DRAFTED)
   createdByName      String
-  templateFields     Json // e.g. [{ name: "clientName", type: "text" }]
+  templateFields     Json
+  templateBody       String
   finalizedVersionId String?  @db.ObjectId
   createdAt          DateTime @default(now())
 
