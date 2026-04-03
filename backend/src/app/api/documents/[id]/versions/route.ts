@@ -57,6 +57,13 @@ export async function POST(req: Request, { params }: Props) {
       },
     });
 
+    await prisma.document.update({
+      where: { id },
+      data: {
+        status: "EDITED",
+      },
+    });
+
     await prisma.timelineEntry.create({
       data: {
         documentId: id,

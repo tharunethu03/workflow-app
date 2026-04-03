@@ -60,7 +60,11 @@ const DocumentCard = ({
       <View className="sub-main">
         <View className="sub-head">
           <Text className="sub-title">{title}</Text>
-          <Text className="sub-meta">{status}</Text>
+          <Text
+            className={`text-sm font-semibold text-white ${status === "DRAFTED" ? "bg-[#F59E0B]" : status === "EDITED" ? "bg-[#3B82F6]" : "bg-[#10B981]"} px-2 p-2 rounded-lg shadow-md flex-shrink-0`}
+          >
+            {status}
+          </Text>
         </View>
       </View>
 

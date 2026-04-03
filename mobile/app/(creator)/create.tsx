@@ -1,4 +1,11 @@
-import { View, Text, Pressable, ScrollView, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { FilePlus, ChevronLeft } from "lucide-react-native";
 
@@ -53,6 +60,14 @@ const Create = () => {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator size="large" color={"#EA7A54"} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-background p-5 justify-between">

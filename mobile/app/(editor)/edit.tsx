@@ -5,6 +5,10 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -52,15 +56,22 @@ const Edit = () => {
         });
 
         if (data.versions && data.versions.length > 0) {
-          const latestVersion = data.version[0];
-          Object.keys(initialValues).forEach((key) => {
-            if (latestVersion.fields[key]) {
-              initialValues[key] = latestVersion.fields[key];
-            }
-          });
-        }
+          const latestVersion = data.versions[0];
+          const latestFields = latestVersion.fields as Record<string, string>;
 
-        setFieldValues(initialValues);
+          const initialValues: Record<string, string> = {};
+          data.templateFields.forEach((field: TemplateField) => {
+            initialValues[field.name] = latestFields[field.name] ?? "";
+          });
+
+          setFieldValues(initialValues);
+        } else {
+          const initialValues: Record<string, string> = {};
+          data.templateFields.forEach((field: TemplateField) => {
+            initialValues[field.name] = "";
+          });
+          setFieldValues(initialValues);
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -96,7 +107,7 @@ const Edit = () => {
   if (loading) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={"#EA7A54"} />
       </SafeAreaView>
     );
   }
@@ -114,89 +125,96 @@ const Edit = () => {
           </View>
         </View>
       </View>
-      <ScrollView
-        className="p-3 flex-col h-full"
-        contentContainerStyle={{
-          paddingBottom: 20,
-        }}
-      >
-        <View className="flex-row items-start justify-between w-full mb-5">
-          <Text className="sub-label">Created on:</Text>
-          <View className="flex-col items-end">
-            <Text className="text-muted-foreground text-sm">
-              {dayjs(document?.createdAt).format("hh:mm A")}
-            </Text>
-            <Text className="text-muted-foreground text-sm">
-              {dayjs(document?.createdAt).format("MM/DD/YYYY")}
-            </Text>
-          </View>
-        </View>
-        <View className="bg-card border border-border rounded-xl p-4 mb-5">
-          <Text className="text-sm font-semibold text-foreground mb-2">
-            Preview:
-          </Text>
-          <Text>
-            {renderLetterStyled(document?.templateBody || "", fieldValues)}
-          </Text>
-        </View>
-        {document?.templateFields.map((field, i) => (
-          <View key={i} className="mb-3">
-            <Text className="text-muted-foreground mb-2">{field.name}</Text>
-            <TextInput
-              value={fieldValues[field.name] ?? ""}
-              onChangeText={(value) => updateField(field.name, value)}
-              placeholder={`Enter ${field.name}`}
-              placeholderTextColor="#9CA3AF"
-              className="border border-border p-3 rounded-lg bg-card focus:border-accent"
-            />
-          </View>
-        ))}
-        <Pressable
-          onPress={() => {
-            setConfirmModal(true);
-          }}
-          className="bg-accent p-4 rounded-xl my-4 shadow-lg mb-10"
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 items-center justify-center gap-10"
         >
-          <Text className="text-white text-center font-semibold">
-            {loading ? "Editing..." : "Edit Document"}
-          </Text>
-        </Pressable>
-      </ScrollView>
-      {confirmModal && (
-        <View
-          className="absolute inset-0 justify-center items-center"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <View className="bg-card w-[80%] border-1 border-accent p-6 rounded-2xl">
-            <Text className="mb-5 text-center">
-              This will create a new version of the document with your changes.
-              Other editors can still contribute.
-            </Text>
-
-            <View className="flex-row items-center justify-center gap-5">
-              <Pressable
-                onPress={() => {
-                  setConfirmModal(false);
-                }}
-                className="bg-card border border-border p-4 rounded-xl"
-              >
-                <Text className="text-muted-foreground text-center font-semibold">
-                  Go back
+          <ScrollView
+            className="p-3 flex-col h-full"
+            contentContainerStyle={{
+              paddingBottom: 20,
+            }}
+          >
+            <View className="flex-row items-start justify-between w-full mb-5">
+              <Text className="sub-label">Created on:</Text>
+              <View className="flex-col items-end">
+                <Text className="text-muted-foreground text-sm">
+                  {dayjs(document?.createdAt).format("hh:mm A")}
                 </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={handleEdit}
-                className="bg-accent p-4 rounded-xl border border-accent"
-              >
-                <Text className="text-white text-center font-semibold">
-                  {loading ? "Editing..." : "Confirm"}
+                <Text className="text-muted-foreground text-sm">
+                  {dayjs(document?.createdAt).format("MM/DD/YYYY")}
                 </Text>
-              </Pressable>
+              </View>
             </View>
-          </View>
-        </View>
-      )}
+            <View className="bg-card border border-border rounded-xl p-4 mb-5">
+              <Text className="text-sm font-semibold text-foreground mb-2">
+                Preview:
+              </Text>
+              <Text>
+                {renderLetterStyled(document?.templateBody || "", fieldValues)}
+              </Text>
+            </View>
+            {document?.templateFields.map((field, i) => (
+              <View key={i} className="mb-3">
+                <Text className="text-muted-foreground mb-2">{field.name}</Text>
+                <TextInput
+                  value={fieldValues[field.name] ?? ""}
+                  onChangeText={(value) => updateField(field.name, value)}
+                  placeholder={`Enter ${field.name}`}
+                  placeholderTextColor="#9CA3AF"
+                  className="border border-border p-3 rounded-lg bg-card focus:border-accent"
+                />
+              </View>
+            ))}
+            <Pressable
+              onPress={() => {
+                setConfirmModal(true);
+              }}
+              className="bg-accent p-4 rounded-xl my-4 shadow-lg mb-10"
+            >
+              <Text className="text-white text-center font-semibold">
+                {loading ? "Editing..." : "Edit Document"}
+              </Text>
+            </Pressable>
+          </ScrollView>
+          {confirmModal && (
+            <View
+              className="absolute inset-0 justify-center items-center"
+              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+            >
+              <View className="bg-card w-[80%] border-1 border-accent p-6 rounded-2xl">
+                <Text className="mb-5 text-center">
+                  This will create a new version of the document with your
+                  changes. Other editors can still contribute.
+                </Text>
+
+                <View className="flex-row items-center justify-center gap-5">
+                  <Pressable
+                    onPress={() => {
+                      setConfirmModal(false);
+                    }}
+                    className="bg-card border border-border p-4 rounded-xl"
+                  >
+                    <Text className="text-muted-foreground text-center font-semibold">
+                      Go back
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    onPress={handleEdit}
+                    className="bg-accent p-4 rounded-xl border border-accent"
+                  >
+                    <Text className="text-white text-center font-semibold">
+                      {loading ? "Editing..." : "Confirm"}
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          )}
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

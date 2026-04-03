@@ -46,7 +46,7 @@ export const api = {
     role: string,
     userName: string,
   ) => {
-    const res = await fetch(`${BASE_URL}/api/${id}/finalize`, {
+    const res = await fetch(`${BASE_URL}/api/documents/${id}/finalize`, {
       method: "PATCH",
       headers: makeHeaders(role, userName, true),
       body: JSON.stringify(data),

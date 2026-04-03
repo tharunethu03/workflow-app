@@ -5,9 +5,9 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useUser } from "@/lib/context";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { api } from "@/lib/api";
 import { FilePlus } from "lucide-react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
@@ -33,9 +33,11 @@ const CreatorHome = () => {
   );
   const [expandedDocument, setExpandedDocument] = useState<any>(null);
 
-  useEffect(() => {
-    fetchDocuments();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchDocuments();
+    }, []),
+  );
 
   const handleCardPress = async (id: string) => {
     if (expandedDocumentId === id) {
@@ -62,7 +64,7 @@ const CreatorHome = () => {
   if (loading) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={"#EA7A54"} />
       </SafeAreaView>
     );
   }
@@ -73,7 +75,7 @@ const CreatorHome = () => {
         <View className="flex-row items-center justify-between px-3">
           <View className="flex flex-row items-center">
             <FilePlus color={"white"} />
-            <View className="ml-2">
+            <View className="ml-3">
               <Text className="text-xl font-bold text-white">Creator</Text>
               <Text className="text-sm font-semibold text-muted">
                 {userName}
