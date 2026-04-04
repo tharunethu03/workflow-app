@@ -1,6 +1,7 @@
 import { View, Text, Pressable } from "react-native";
 import dayjs from "dayjs";
 import clsx from "clsx";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 type TimelineEntry = {
   id: string;
@@ -36,6 +37,8 @@ const DocumentCard = ({
   timeline,
   finalizedVersion,
 }: DocumentCardProps) => {
+  const router = useRouter();
+  const { id } = useLocalSearchParams();
   const formatDateTime = (value?: string): string => {
     if (!value) return "Not provided";
     const parsedDate = dayjs(value);
@@ -45,13 +48,18 @@ const DocumentCard = ({
   };
 
   const buttonText =
-    role === "editor"
-      ? "Edit"
-      : role === "reviewer"
-        ? "Review"
-        : role === "downloader"
-          ? "Download"
-          : "View";
+    role === "admin"
+      ? "Manage"
+      : role === "creator"
+        ? "View"
+        : role === "editor"
+          ? "Edit"
+          : role === "reviewer"
+            ? "Review"
+            : role === "downloader"
+              ? "Download"
+              : "View";
+
   return (
     <Pressable
       onPress={onPress}
@@ -144,16 +152,32 @@ const DocumentCard = ({
                   </View>
                 </View>
               )}
-              {role !== "creator" ? (
-                <Pressable
-                  onPress={cardButtonPress}
-                  className="bg-accent py-3 px-8 rounded-xl my-5 shadow-lg w-fit self-end"
-                >
-                  <Text className="text-white text-center font-semibold">
-                    {buttonText}
-                  </Text>
-                </Pressable>
-              ) : null}
+              {role === "admin" && (
+                <View className="flex-row flex-wrap gap-3 mt-3">
+                  <Pressable
+                    onPress={() => router.push(`/(editor)/edit?id=${id}`)}
+                    className="border border-accent px-4 py-2 rounded-xl"
+                  >
+                    <Text className="text-accent font-semibold">Edit</Text>
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() => router.push(`/(reviewer)/review?id=${id}`)}
+                    className="border border-accent px-4 py-2 rounded-xl"
+                  >
+                    <Text className="text-accent font-semibold">Review</Text>
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() =>
+                      router.push(`/(downloader)/download?id=${id}`)
+                    }
+                    className="border border-accent px-4 py-2 rounded-xl"
+                  >
+                    <Text className="text-accent font-semibold">Download</Text>
+                  </Pressable>
+                </View>
+              )}
             </View>
           </View>
         </View>

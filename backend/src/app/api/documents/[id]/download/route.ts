@@ -34,20 +34,11 @@ export async function GET(req: Request, { params }: Props) {
       where: { id: document.finalizedVersionId! },
     });
 
-    await prisma.timelineEntry.create({
-      data: {
-        documentId: id,
-        action: "DOWNLOADED",
-        userName: downloaderName,
-        userRole: role,
-        versionNumber: finalizedVersion?.versionNumber,
-      },
-    });
-
     return NextResponse.json({
       id: document.id,
       title: document.title,
       templateFields: document.templateFields,
+      templateBody: document.templateBody,
       finalizedVersion: {
         id: finalizedVersion?.id,
         versionNumber: finalizedVersion?.versionNumber,
@@ -60,6 +51,41 @@ export async function GET(req: Request, { params }: Props) {
     console.error(error);
     return NextResponse.json(
       { error: "Failed to download document" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function POST(req: Request, { params }: Props) {
+  try {
+    const { id } = await params;
+    const role = req.headers.get("role");
+    const downloaderName = req.headers.get("username") ?? "unknown";
+
+    if (role !== "downloader" && role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const finalizedVersion = await prisma.version.findFirst({
+      where: { documentId: id },
+      orderBy: { versionNumber: "desc" },
+    });
+
+    await prisma.timelineEntry.create({
+      data: {
+        documentId: id,
+        action: "DOWNLOADED",
+        userName: downloaderName,
+        userRole: role,
+        versionNumber: finalizedVersion?.versionNumber,
+      },
+    });
+
+    return NextResponse.json({ message: "Download recorded" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Failed to record download" },
       { status: 500 },
     );
   }

@@ -55,7 +55,15 @@ export const api = {
   },
 
   downloadDocument: async (id: string, role: string, userName: string) => {
-    const res = await fetch(`${BASE_URL}/api/${id}/download`, {
+    const res = await fetch(`${BASE_URL}/api/documents/${id}/download`, {
+      headers: makeHeaders(role, userName),
+    });
+    return res.json();
+  },
+
+  recordDownload: async (id: string, role: string, userName: string) => {
+    const res = await fetch(`${BASE_URL}/api/documents/${id}/download`, {
+      method: "POST",
       headers: makeHeaders(role, userName),
     });
     return res.json();

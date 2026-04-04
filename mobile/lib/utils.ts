@@ -33,3 +33,14 @@ export const renderLetterStyled = (
     );
   });
 };
+
+export const renderLetterPlain = (
+  templateBody: string,
+  fields: Record<string, string>,
+) => {
+  let rendered = templateBody;
+  Object.entries(fields).forEach(([key, value]) => {
+    rendered = rendered.replaceAll(`{{${key}}}`, value || `{{${key}}}`);
+  });
+  return rendered;
+};

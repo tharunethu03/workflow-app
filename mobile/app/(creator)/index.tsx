@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useUser } from "@/lib/context";
 import { useFocusEffect, useRouter } from "expo-router";
 import { api } from "@/lib/api";
-import { FilePlus } from "lucide-react-native";
+import { FilePlus, ShieldUser } from "lucide-react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 import DocumentCard from "@/components/DocumentCard";
@@ -74,9 +74,15 @@ const CreatorHome = () => {
       <View className="bg-accent py-3 rounded-xl mb-5">
         <View className="flex-row items-center justify-between px-3">
           <View className="flex flex-row items-center">
-            <FilePlus color={"white"} />
+            {role === "creator" ? (
+              <FilePlus color={"white"} />
+            ) : (
+              role === "admin" && <ShieldUser color={"white"} />
+            )}
             <View className="ml-3">
-              <Text className="text-xl font-bold text-white">Creator</Text>
+              <Text className="text-xl font-bold text-white">
+                {role === "creator" ? "Creator" : role === "admin" && "Admin"}
+              </Text>
               <Text className="text-sm font-semibold text-muted">
                 {userName}
               </Text>
@@ -119,7 +125,7 @@ const CreatorHome = () => {
         className="bg-accent p-4 rounded-xl mb-5 shadow-lg"
       >
         <Text className="text-white text-center font-semibold">
-          + New Document
+          +  New Document
         </Text>
       </Pressable>
     </SafeAreaView>
