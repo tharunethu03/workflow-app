@@ -36,7 +36,7 @@ type Document = {
 
 const Edit = () => {
   const params = useLocalSearchParams();
-  const id = params.id as string
+  const id = params.id as string;
   const [loading, setLoading] = useState(true);
   const [document, setDocument] = useState<Document | null>(null);
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
@@ -50,13 +50,10 @@ const Edit = () => {
       try {
         const data = await api.getDocument(id as string);
 
-        
-
         if (!data || !data.templateFields) {
           console.error("Invalid document data:", data);
           return;
         }
-
 
         setDocument(data);
 
@@ -188,43 +185,43 @@ const Edit = () => {
               </Text>
             </Pressable>
           </ScrollView>
-          {confirmModal && (
-            <View
-              className="absolute inset-0 justify-center items-center"
-              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-            >
-              <View className="bg-card w-[80%] border-1 border-accent p-6 rounded-2xl">
-                <Text className="mb-5 text-center">
-                  This will create a new version of the document with your
-                  changes. Other editors can still contribute.
-                </Text>
-
-                <View className="flex-row items-center justify-center gap-5">
-                  <Pressable
-                    onPress={() => {
-                      setConfirmModal(false);
-                    }}
-                    className="bg-card border border-border p-4 rounded-xl"
-                  >
-                    <Text className="text-muted-foreground text-center font-semibold">
-                      Go back
-                    </Text>
-                  </Pressable>
-
-                  <Pressable
-                    onPress={handleEdit}
-                    className="bg-accent p-4 rounded-xl border border-accent"
-                  >
-                    <Text className="text-white text-center font-semibold">
-                      {loading ? "Editing..." : "Confirm"}
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>
-          )}
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
+      {confirmModal && (
+        <View
+          className="absolute inset-0 justify-center items-center"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <View className="bg-card w-[80%] border-1 border-accent p-6 rounded-2xl">
+            <Text className="mb-5 text-center">
+              This will create a new version of the document with your changes.
+              Other editors can still contribute.
+            </Text>
+
+            <View className="flex-row items-center justify-center gap-5">
+              <Pressable
+                onPress={() => {
+                  setConfirmModal(false);
+                }}
+                className="bg-card border border-border p-4 rounded-xl"
+              >
+                <Text className="text-muted-foreground text-center font-semibold">
+                  Go back
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleEdit}
+                className="bg-accent p-4 rounded-xl border border-accent"
+              >
+                <Text className="text-white text-center font-semibold">
+                  {loading ? "Editing..." : "Confirm"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

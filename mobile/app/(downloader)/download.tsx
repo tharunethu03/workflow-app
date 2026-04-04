@@ -8,7 +8,7 @@ import {
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 import { api } from "@/lib/api";
@@ -38,6 +38,7 @@ type Document = {
 };
 
 const Download = () => {
+  const router = useRouter();
   const { id } = useLocalSearchParams();
   const { role, userName } = useUser();
   const [loading, setLoading] = useState(true);
@@ -84,6 +85,7 @@ const Download = () => {
     await Sharing.shareAsync(uri);
 
     await api.recordDownload(id as string, role!, userName);
+    router.back();
   };
 
   if (loading) {
@@ -93,8 +95,6 @@ const Download = () => {
       </SafeAreaView>
     );
   }
-
-  
 
   return (
     <SafeAreaView className="flex-1 justify-between bg-background p-5">
