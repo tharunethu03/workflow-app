@@ -13,6 +13,7 @@ import { FilePlus, ShieldUser } from "lucide-react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 import DocumentCard from "@/components/DocumentCard";
+import LogoutButton from "@/components/LogoutButton";
 const SafeAreaView = styled(RNSafeAreaView);
 
 type Document = {
@@ -89,11 +90,7 @@ const CreatorHome = () => {
             </View>
           </View>
 
-          <Pressable>
-            <Text className="bg-card text-accent p-3 w-fit rounded-xl font-bold">
-              Log out
-            </Text>
-          </Pressable>
+          <LogoutButton />
         </View>
       </View>
       <FlatList
@@ -125,7 +122,7 @@ const CreatorHome = () => {
         className="bg-accent p-4 rounded-xl mb-5 shadow-lg"
       >
         <Text className="text-white text-center font-semibold">
-          +  New Document
+          + New Document
         </Text>
       </Pressable>
     </SafeAreaView>

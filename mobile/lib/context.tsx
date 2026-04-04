@@ -7,6 +7,7 @@ type UserContextType = {
   userName: string;
   setRole: (role: Role) => void;
   setUserName: (userName: string) => void;
+  logout: () => void;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -15,8 +16,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [role, setRole] = useState<Role | null>(null);
   const [userName, setUserName] = useState("");
 
+  const logout = () => {
+    setRole(null);
+    setUserName("");
+  };
+
   return (
-    <UserContext.Provider value={{ role, userName, setRole, setUserName }}>
+    <UserContext.Provider
+      value={{ role, userName, setRole, setUserName, logout }}
+    >
       {children}
     </UserContext.Provider>
   );

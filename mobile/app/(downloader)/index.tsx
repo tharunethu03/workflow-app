@@ -13,6 +13,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { api } from "@/lib/api";
 import { Download } from "lucide-react-native";
 import DocumentCard from "@/components/DocumentCard";
+import LogoutButton from "@/components/LogoutButton";
 const SafeAreaView = styled(RNSafeAreaView);
 
 type Document = {
@@ -84,11 +85,7 @@ const DownloaderHome = () => {
             </View>
           </View>
 
-          <Pressable>
-            <Text className="bg-card text-accent p-3 w-fit rounded-xl font-bold">
-              Log out
-            </Text>
-          </Pressable>
+          <LogoutButton />
         </View>
       </View>
       <FlatList

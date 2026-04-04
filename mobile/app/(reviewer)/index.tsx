@@ -13,6 +13,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import DocumentCard from "@/components/DocumentCard";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
+import LogoutButton from "@/components/LogoutButton";
 const SafeAreaView = styled(RNSafeAreaView);
 
 type Document = {
@@ -82,11 +83,7 @@ const ReviewerHome = () => {
             </View>
           </View>
 
-          <Pressable>
-            <Text className="bg-card text-accent p-3 w-fit rounded-xl font-bold">
-              Log out
-            </Text>
-          </Pressable>
+          <LogoutButton />
         </View>
       </View>
       <FlatList
