@@ -13,6 +13,7 @@ type TimelineEntry = {
 };
 
 type DocumentCardProps = {
+  id: string;
   role: string | null;
   title: string;
   status: string;
@@ -25,6 +26,7 @@ type DocumentCardProps = {
 };
 
 const DocumentCard = ({
+  id,
   title,
   status,
   createdAt,
@@ -36,7 +38,6 @@ const DocumentCard = ({
   finalizedVersion,
 }: DocumentCardProps) => {
   const router = useRouter();
-  const { id } = useLocalSearchParams();
   const formatDateTime = (value?: string): string => {
     if (!value) return "Not provided";
     const parsedDate = dayjs(value);
@@ -137,7 +138,7 @@ const DocumentCard = ({
                   </View>
                 </View>
               )}
-              {role === "editor" && (
+              {role === "editor" && status !== "FINALIZED" && (
                 <Pressable
                   onPress={() => router.push(`/(editor)/edit?id=${id}`)}
                   className="border border-accent px-6 py-3 rounded-xl self-end"
@@ -165,7 +166,7 @@ const DocumentCard = ({
               )}
 
               {role === "admin" && (
-                <View className="flex-row flex-wrap gap-3 mt-3">
+                <View className="flex-row flex-wrap gap-3 mt-3 self-end">
                   <Pressable
                     onPress={() => router.push(`/(editor)/edit?id=${id}`)}
                     className="border border-accent px-4 py-2 rounded-xl"
@@ -180,14 +181,18 @@ const DocumentCard = ({
                     <Text className="text-accent font-semibold">Review</Text>
                   </Pressable>
 
-                  <Pressable
-                    onPress={() =>
-                      router.push(`/(downloader)/download?id=${id}`)
-                    }
-                    className="border border-accent px-4 py-2 rounded-xl"
-                  >
-                    <Text className="text-accent font-semibold">Download</Text>
-                  </Pressable>
+                  {status === "FINALIZED" && (
+                    <Pressable
+                      onPress={() =>
+                        router.push(`/(downloader)/download?id=${id}`)
+                      }
+                      className="border border-accent px-4 py-2 rounded-xl"
+                    >
+                      <Text className="text-accent font-semibold">
+                        Download
+                      </Text>
+                    </Pressable>
+                  )}
                 </View>
               )}
             </View>

@@ -62,6 +62,13 @@ const CreatorHome = () => {
     }
   };
 
+  let preEditDocuments;
+  if (role === "creator") {
+    preEditDocuments = documents.filter((d) => d.status === "DRAFTED");
+  } else {
+    preEditDocuments = documents;
+  }
+
   if (loading) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-background">
@@ -94,7 +101,7 @@ const CreatorHome = () => {
         </View>
       </View>
       <FlatList
-        data={documents}
+        data={preEditDocuments}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={
           <Text className="text-center text-muted-foreground mt-10">

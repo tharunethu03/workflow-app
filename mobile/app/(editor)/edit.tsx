@@ -35,7 +35,8 @@ type Document = {
 };
 
 const Edit = () => {
-  const { id } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const id = params.id as string
   const [loading, setLoading] = useState(true);
   const [document, setDocument] = useState<Document | null>(null);
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
@@ -48,6 +49,15 @@ const Edit = () => {
     const fetchDocument = async () => {
       try {
         const data = await api.getDocument(id as string);
+
+        
+
+        if (!data || !data.templateFields) {
+          console.error("Invalid document data:", data);
+          return;
+        }
+
+
         setDocument(data);
 
         const initialValues: Record<string, string> = {};
@@ -155,7 +165,7 @@ const Edit = () => {
                 {renderLetterStyled(document?.templateBody || "", fieldValues)}
               </Text>
             </View>
-            {document?.templateFields.map((field, i) => (
+            {(document?.templateFields ?? []).map((field, i) => (
               <View key={i} className="mb-3">
                 <Text className="text-muted-foreground mb-2">{field.name}</Text>
                 <TextInput

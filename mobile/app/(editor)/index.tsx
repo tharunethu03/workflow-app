@@ -62,6 +62,10 @@ const EditorHome = () => {
     }
   };
 
+  const preFinalizedDocuments = documents.filter(
+    (d) => d.status !== "FINALIZED",
+  );
+
   if (loading) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-background">
@@ -88,7 +92,7 @@ const EditorHome = () => {
         </View>
       </View>
       <FlatList
-        data={documents}
+        data={preFinalizedDocuments}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={
           <Text className="text-center text-muted-foreground mt-10">
