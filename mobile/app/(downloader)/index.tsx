@@ -78,7 +78,7 @@ const DownloaderHome = () => {
           <View className="flex flex-row items-center">
             <Download color={"white"} />
             <View className="ml-3">
-              <Text className="text-xl font-bold text-white">Editor</Text>
+              <Text className="text-xl font-bold text-white">Downloader</Text>
               <Text className="text-sm font-semibold text-muted">
                 {userName}
               </Text>
@@ -102,9 +102,6 @@ const DownloaderHome = () => {
             role={role}
             expanded={expandedDocumentId === item.id}
             onPress={() => handleCardPress(item.id)}
-            cardButtonPress={() =>
-              router.push(`/(downloader)/download?id=${item.id}`)
-            }
             timeline={expandedDocument?.timeline ?? []}
             finalizedVersion={expandedDocument?.versions?.find(
               (v: any) => v.id === expandedDocument?.finalizedVersionId,

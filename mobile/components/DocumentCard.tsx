@@ -19,7 +19,6 @@ type DocumentCardProps = {
   createdAt: string;
   createdByName: string;
   onPress: () => void;
-  cardButtonPress?: () => void;
   expanded: boolean;
   timeline: TimelineEntry[];
   finalizedVersion: any;
@@ -31,7 +30,6 @@ const DocumentCard = ({
   createdAt,
   createdByName,
   onPress,
-  cardButtonPress,
   expanded,
   role,
   timeline,
@@ -47,19 +45,6 @@ const DocumentCard = ({
       : "Not provided";
   };
 
-  const buttonText =
-    role === "admin"
-      ? "Manage"
-      : role === "creator"
-        ? "View"
-        : role === "editor"
-          ? "Edit"
-          : role === "reviewer"
-            ? "Review"
-            : role === "downloader"
-              ? "Download"
-              : "View";
-
   return (
     <Pressable
       onPress={onPress}
@@ -69,7 +54,7 @@ const DocumentCard = ({
         <View className="sub-head">
           <Text className="sub-title">{title}</Text>
           <Text
-            className={`text-sm font-semibold text-white ${status === "DRAFTED" ? "bg-[#F59E0B]" : status === "EDITED" ? "bg-[#3B82F6]" : "bg-[#10B981]"} px-2 p-2 rounded-lg shadow-md flex-shrink-0`}
+            className={`text-sm font-semibold text-white ${status === "DRAFTED" ? "bg-[#F59E0B]" : status === "EDITED" ? "bg-[#3B82F6]" : "bg-[#10B981]"} px-2 p-2 rounded-lg shadow-md shrink-0`}
           >
             {status}
           </Text>
@@ -106,7 +91,7 @@ const DocumentCard = ({
                       <View className="items-center">
                         <View className="w-2 h-2 rounded-full bg-accent" />
                         {i < timeline.length - 1 && (
-                          <View className="w-[2px] h-10 bg-accent" />
+                          <View className="w-0.5 h-10 bg-accent" />
                         )}
                       </View>
                       <View className="flex-col items-start">
@@ -135,7 +120,7 @@ const DocumentCard = ({
                 ))}
               </View>
               {finalizedVersion && (
-                <View className="flex-row items-start justify-between w-full">
+                <View className="flex-row items-start justify-between w-full mb-5">
                   <Text className="sub-label mb-3">Finalized Version:</Text>
                   <View className="flex-col items-end">
                     <Text className="text-accent font-bold">
@@ -152,6 +137,33 @@ const DocumentCard = ({
                   </View>
                 </View>
               )}
+              {role === "editor" && (
+                <Pressable
+                  onPress={() => router.push(`/(editor)/edit?id=${id}`)}
+                  className="border border-accent px-6 py-3 rounded-xl self-end"
+                >
+                  <Text className="text-accent font-semibold">Edit</Text>
+                </Pressable>
+              )}
+
+              {role === "reviewer" && (
+                <Pressable
+                  onPress={() => router.push(`/(reviewer)/review?id=${id}`)}
+                  className="border border-accent px-6 py-3 self-end rounded-xl"
+                >
+                  <Text className="text-accent font-semibold">Review</Text>
+                </Pressable>
+              )}
+
+              {role === "downloader" && (
+                <Pressable
+                  onPress={() => router.push(`/(downloader)/download?id=${id}`)}
+                  className="border border-accent px-6 py-3 self-end rounded-xl"
+                >
+                  <Text className="text-accent font-semibold">Download</Text>
+                </Pressable>
+              )}
+
               {role === "admin" && (
                 <View className="flex-row flex-wrap gap-3 mt-3">
                   <Pressable

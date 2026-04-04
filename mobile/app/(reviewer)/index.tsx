@@ -100,9 +100,6 @@ const ReviewerHome = () => {
             role={role}
             expanded={expandedDocumentId === item.id}
             onPress={() => handleCardPress(item.id)}
-            cardButtonPress={() =>
-              router.push(`/(reviewer)/review?id=${item.id}`)
-            }
             timeline={expandedDocument?.timeline ?? []}
             finalizedVersion={expandedDocument?.versions?.find(
               (v: any) => v.id === expandedDocument?.finalizedVersionId,

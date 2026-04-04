@@ -39,7 +39,7 @@ export default function Index() {
     editor: "/(editor)",
     reviewer: "/(reviewer)",
     downloader: "/(downloader)",
-    admin: "/(creator)", // admin sees creator view
+    admin: "/(creator)", 
   };
 
   const handleLogin = () => {
