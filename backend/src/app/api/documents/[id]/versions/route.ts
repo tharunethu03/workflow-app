@@ -34,12 +34,15 @@ export async function POST(req: Request, { params }: Props) {
         { status: 404 },
       );
     }
-    if (document.status === "FINALIZED") {
-      return NextResponse.json(
-        { error: "Document is finalized and cannot be edited" },
-        { status: 403 },
-      );
-    }
+
+    // commented out to let the admin add a new version after been finalized
+
+    // if (document.status === "FINALIZED") {
+    //   return NextResponse.json(
+    //     { error: "Document is finalized and cannot be edited" },
+    //     { status: 403 },
+    //   );
+    // }
 
     // Server calculates the version number
     const existingVersions = await prisma.version.count({

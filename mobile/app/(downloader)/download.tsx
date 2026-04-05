@@ -14,6 +14,8 @@ import { styled } from "nativewind";
 import { api } from "@/lib/api";
 import { useUser } from "@/lib/context";
 import { renderLetterPlain, renderLetterStyled } from "@/lib/utils";
+import { ChevronLeft } from "lucide-react-native";
+
 const SafeAreaView = styled(RNSafeAreaView);
 
 type TemplateField = {
@@ -101,7 +103,10 @@ const Download = () => {
       <View className="bg-accent py-3 rounded-xl mb-5">
         <View className="flex-row items-center justify-between px-3">
           <View className="flex flex-row items-center">
-            <View className="ml-2">
+            <View className="flex-row">
+              <Pressable className="px-2" onPress={() => router.back()}>
+                <ChevronLeft color={"white"} />
+              </Pressable>
               <Text className="text-xl font-bold text-white">
                 {document?.title}
               </Text>

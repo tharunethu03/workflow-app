@@ -13,6 +13,8 @@ import { useUser } from "@/lib/context";
 import { api } from "@/lib/api";
 import { renderLetterStyled } from "@/lib/utils";
 import dayjs from "dayjs";
+import { ChevronLeft } from "lucide-react-native";
+
 const SafeAreaView = styled(RNSafeAreaView);
 
 type TemplateField = {
@@ -119,7 +121,10 @@ const Review = () => {
       <View className="bg-accent py-3 rounded-xl mb-5">
         <View className="flex-row items-center justify-between px-3">
           <View className="flex flex-row items-center">
-            <View className="ml-2">
+            <View className="flex-row">
+              <Pressable className="px-2" onPress={() => router.back()}>
+                <ChevronLeft color={"white"} />
+              </Pressable>
               <Text className="text-xl font-bold text-white">
                 {document?.title}
               </Text>
@@ -193,6 +198,58 @@ const Review = () => {
           </>
         )}
 
+        {role === "admin" && document?.status === "FINALIZED" && (
+          <>
+            <View className="flex flex-row flex-wrap justify-center gap-3 mb-3">
+              {document?.versions.map((version, index) => (
+                <Pressable
+                  onPress={() => {
+                    setSelectedVersion(version);
+                    setFieldValues(version.fields as Record<string, string>);
+                  }}
+                  key={index}
+                  className={`border ${selectedVersion?.id === version.id ? "bg-accent border-accent" : "bg-card border-border"} p-3 rounded-lg`}
+                >
+                  <Text
+                    className={`${selectedVersion?.id === version.id ? "text-white" : "text-muted-foreground"} text-center font-semibold`}
+                  >
+                    Version {version.versionNumber}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <View className="flex-col my-3">
+              <View className="flex-row items-center justify-between">
+                <Text className="sub-label">Edited by:</Text>
+                <View className="flex-row items-end gap-5">
+                  <Text
+                    className={`text-sm font-semibold ${selectedVersion?.editedByRole === "editor" ? "text-success" : "text-destructive"}`}
+                  >
+                    {selectedVersion?.editedByRole === "editor"
+                      ? "EDITOR"
+                      : selectedVersion?.editedByRole === "admin" && "ADMIN"}
+                  </Text>
+                  <Text className="text-foreground">
+                    {selectedVersion?.editedByName}
+                  </Text>
+                </View>
+              </View>
+              <View className="flex-row items-start justify-between">
+                <Text className="sub-label">Edited at:</Text>
+                <View className="flex-col items-end">
+                  <Text className="text-muted-foreground text-sm">
+                    {dayjs(selectedVersion?.createdAt).format("hh:mm A")}
+                  </Text>
+                  <Text className="text-muted-foreground text-sm">
+                    {dayjs(selectedVersion?.createdAt).format("MM/DD/YYYY")}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </>
+        )}
+
         <View
           className="bg-card border border-border rounded-xl p-4 mb-5"
           style={{ maxHeight: 300 }}
@@ -205,6 +262,17 @@ const Review = () => {
           </ScrollView>
         </View>
       </View>
+
+      {role === "admin" && document?.status === "FINALIZED" && (
+        <Pressable
+          onPress={() => setConfirmModal(true)}
+          className="bg-accent p-4 rounded-xl my-4 shadow-lg mb-10"
+        >
+          <Text className="text-white text-center font-semibold">
+            Finalize Version
+          </Text>
+        </Pressable>
+      )}
 
       {document?.status !== "FINALIZED" && document?.status !== "DRAFTED" && (
         <Pressable
