@@ -44,7 +44,6 @@ export async function POST(req: Request, { params }: Props) {
     //   );
     // }
 
-    // Server calculates the version number
     const existingVersions = await prisma.version.count({
       where: { documentId: id },
     });

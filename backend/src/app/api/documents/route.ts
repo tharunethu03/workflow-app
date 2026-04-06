@@ -57,14 +57,6 @@ export async function GET(req: Request) {
   try {
     const documents = await prisma.document.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
-        versions: {
-          orderBy: { createdAt: "desc" },
-        },
-        timeline: {
-          orderBy: { createdAt: "desc" },
-        },
-      },
     });
 
     const formatted = documents.map((d) => {
